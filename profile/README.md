@@ -49,3 +49,5 @@
 | [Sena Engin](https://github.com/senaengin) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/senaengin?label=Takipçi&style=social) |
 | [Erkan Tokmak](https://github.com/erkantokmak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/erkantokmak?label=Takipçi&style=social) |
 | [Onur Ardıç](https://github.com/Onur-Ardic) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Onur-Ardic?label=Takipçi&style=social) |
+| [Buğra Özkahraman](https://github.com/Bugra034) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Bugra034?label=Takipçi&style=social) |
+| [Yunus Orak](https://github.com/yunusorak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/yunusorak?label=Takipçi&style=social) |
