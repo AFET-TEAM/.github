@@ -234,9 +234,13 @@ async function updateReadme(monthlyStats, yearlyStats) {
     
     // Check if the next section is the yearly stats marker, if so skip it
     // This ensures both monthly and yearly sections are removed together
-    if (nextSectionIndex !== -1 && readme.indexOf(yearlyStatsMarker, nextSectionIndex) === nextSectionIndex + 1) {
-      // Find the section after the yearly stats
-      nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
+    if (nextSectionIndex !== -1) {
+      // nextSectionIndex points to '\n## ', so we need to skip '\n' and check the rest
+      const sectionStart = nextSectionIndex + 1; // Skip the newline
+      if (readme.startsWith(yearlyStatsMarker, sectionStart)) {
+        // Find the section after the yearly stats
+        nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
+      }
     }
     
     if (nextSectionIndex !== -1) {
