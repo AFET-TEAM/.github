@@ -64,21 +64,15 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 | [Yunus Orak](https://github.com/yunusorak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/yunusorak?label=Takipçi&style=social) |
 
 
+
+
 ## 📊 Aylık İstatistikler (Şubat 2026)
-
-### 🏆 En Çok PR Gönderen Geliştiriciler
-
-| Sıra | Geliştirici | PR Sayısı |
-|------|-------------|----------|
-| 🥇 1 | [@Copilot](https://github.com/Copilot) | 2 |
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
 | Sıra | Geliştirici | Commit Sayısı |
 |------|-------------|---------------|
-| 🥇 1 | [@Copilot](https://github.com/Copilot) | 3 |
-| 🥈 2 | [@github-actions[bot]](https://github.com/github-actions[bot]) | 2 |
-| 🥉 3 | [@waroi](https://github.com/waroi) | 1 |
+| 🥇 1 | [@waroi](https://github.com/waroi) | 4 |
 
 
 ## 📈 Yıllık İstatistikler (2026)
