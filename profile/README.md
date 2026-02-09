@@ -56,8 +56,18 @@
 
 ### 🏆 En Çok PR Gönderen Geliştiriciler
 
-Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en çok PR gönderen geliştiricileri listeleyecektir.
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak AFET-TEAM organizasyonu altındaki tüm repolardan o ay en çok PR gönderen geliştiricileri listeleyecektir.
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
-Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en fazla commit yapan geliştiricileri listeleyecektir.
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak AFET-TEAM organizasyonu altındaki tüm repolardan o ay en fazla commit yapan geliştiricileri listeleyecektir.
+
+## 📈 Yıllık İstatistikler (2026)
+
+### 🏆 En Çok PR Gönderen Geliştiriciler
+
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak AFET-TEAM organizasyonu altındaki tüm repolardan yıl boyunca en çok PR gönderen geliştiricileri listeleyecektir.
+
+### 💻 En Çok Geliştirme Yapan Geliştiriciler
+
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak AFET-TEAM organizasyonu altındaki tüm repolardan yıl boyunca en fazla commit yapan geliştiricileri listeleyecektir.
