@@ -16,6 +16,17 @@
 
 **Daha fazla bilgi için her bir repomuzun dokümantasyonuna göz atabilirsiniz.**
 
+## 📋 Rapor Arşivi
+
+AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebilir.
+
+### Özellikler
+- ✅ Bu haftanın raporlarını düzenleyebilme
+- ✅ Geçen haftanın raporlarını düzenleyebilme
+- 🔒 2 hafta ve daha eski raporlar düzenlenemez
+
+**[Rapor Arşivine Git →](../archive/index.html)**
+
 ## ⚙️ Kullandığımız Teknolojiler
 
 | HTML | CSS | ReactJS | Next.js | Sass | Firebase | Git | TypeScript | JavaScript |

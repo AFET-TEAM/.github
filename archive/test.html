@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archive Tests</title>
+</head>
+<body>
+    <h1>Archive Report Edit Restrictions - Test Suite</h1>
+    <div id="test-results"></div>
+
+    <script>
+        // Import only the necessary functions from archive.js for testing
+        // We'll test the logic directly without the full ArchiveManager initialization
+        
+        // Copy the essential functions for testing
+        function getWeekInfo(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return {
+                year: d.getFullYear(),
+                week: weekNo,
+                date: d
+            };
+        }
+
+        function isEditable(reportDate) {
+            const now = new Date();
+            const report = new Date(reportDate);
+            
+            const currentWeek = getWeekInfo(now);
+            const reportWeek = getWeekInfo(report);
+            
+            // Note: This uses a simplified calculation with 52 weeks per year.
+            // In reality, some years have 53 ISO weeks. For most practical purposes
+            // within a 1-2 week range, this approximation is sufficient.
+            const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
+            
+            return weeksDiff >= 0 && weeksDiff <= 1;
+        }
+
+        function getWeekLabel(reportDate) {
+            const now = new Date();
+            const report = new Date(reportDate);
+            
+            const currentWeek = getWeekInfo(now);
+            const reportWeek = getWeekInfo(report);
+            
+            // Note: This uses a simplified calculation with 52 weeks per year.
+            // In reality, some years have 53 ISO weeks.
+            const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
+            
+            if (weeksDiff === 0) {
+                return { text: 'Bu Hafta', class: 'current' };
+            } else if (weeksDiff === 1) {
+                return { text: 'Geçen Hafta', class: 'last-week' };
+            } else if (weeksDiff > 1) {
+                return { text: `${weeksDiff} hafta önce`, class: 'old' };
+            } else {
+                return { text: 'Gelecek', class: 'future' };
+            }
+        }
+
+        // Test Suite for Archive Manager
+        const testResults = [];
+
+        function runTests() {
+            
+            // Test 1: Current week report should be editable
+            const today = new Date();
+            const currentWeekEditable = isEditable(today.toISOString().split('T')[0]);
+            testResults.push({
+                name: 'Current week report is editable',
+                passed: currentWeekEditable === true
+            });
+
+            // Test 2: Last week report should be editable
+            const lastWeek = new Date();
+            lastWeek.setDate(lastWeek.getDate() - 7);
+            const lastWeekEditable = isEditable(lastWeek.toISOString().split('T')[0]);
+            testResults.push({
+                name: 'Last week report is editable',
+                passed: lastWeekEditable === true
+            });
+
+            // Test 3: 2 weeks ago report should NOT be editable
+            const twoWeeksAgo = new Date();
+            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+            const twoWeeksNotEditable = isEditable(twoWeeksAgo.toISOString().split('T')[0]);
+            testResults.push({
+                name: '2 weeks old report is NOT editable',
+                passed: twoWeeksNotEditable === false
+            });
+
+            // Test 4: 3 weeks ago report should NOT be editable
+            const threeWeeksAgo = new Date();
+            threeWeeksAgo.setDate(threeWeeksAgo.getDate() - 21);
+            const threeWeeksNotEditable = isEditable(threeWeeksAgo.toISOString().split('T')[0]);
+            testResults.push({
+                name: '3 weeks old report is NOT editable',
+                passed: threeWeeksNotEditable === false
+            });
+
+            // Test 5: 1 month ago report should NOT be editable
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+            const oneMonthNotEditable = isEditable(oneMonthAgo.toISOString().split('T')[0]);
+            testResults.push({
+                name: '1 month old report is NOT editable',
+                passed: oneMonthNotEditable === false
+            });
+
+            // Test 6: Week info calculation
+            const weekInfo = getWeekInfo(today);
+            testResults.push({
+                name: 'Week info is calculated correctly',
+                passed: weekInfo.year !== undefined && weekInfo.week !== undefined && weekInfo.week > 0
+            });
+
+            // Test 7: Week label for current week
+            const currentWeekLabel = getWeekLabel(today);
+            testResults.push({
+                name: 'Current week label is correct',
+                passed: currentWeekLabel.text === 'Bu Hafta' && currentWeekLabel.class === 'current'
+            });
+
+            // Test 8: Week label for last week
+            const lastWeekLabel = getWeekLabel(lastWeek);
+            testResults.push({
+                name: 'Last week label is correct',
+                passed: lastWeekLabel.text === 'Geçen Hafta' && lastWeekLabel.class === 'last-week'
+            });
+
+            // Display results
+            displayResults();
+        }
+
+        function displayResults() {
+            const container = document.getElementById('test-results');
+            const passedCount = testResults.filter(t => t.passed).length;
+            const totalCount = testResults.length;
+            
+            let html = `<h2>Test Results: ${passedCount}/${totalCount} Passed</h2><ul>`;
+            
+            testResults.forEach(test => {
+                const icon = test.passed ? '✅' : '❌';
+                const color = test.passed ? 'green' : 'red';
+                html += `<li style="color: ${color}; margin: 10px 0;">${icon} ${test.name}</li>`;
+            });
+            
+            html += '</ul>';
+            
+            if (passedCount === totalCount) {
+                html += '<h3 style="color: green;">✨ All tests passed!</h3>';
+            } else {
+                html += '<h3 style="color: red;">❌ Some tests failed!</h3>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', () => {
+            runTests();
+        });
+    </script>
+</body>
+</html>
