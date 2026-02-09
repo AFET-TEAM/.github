@@ -52,12 +52,19 @@
 | [Buğra Özkahraman](https://github.com/Bugra034) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Bugra034?label=Takipçi&style=social) |
 | [Yunus Orak](https://github.com/yunusorak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/yunusorak?label=Takipçi&style=social) |
 
+
 ## 📊 Aylık İstatistikler (Şubat 2026)
 
 ### 🏆 En Çok PR Gönderen Geliştiriciler
 
-Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en çok PR gönderen geliştiricileri listeleyecektir.
+| Sıra | Geliştirici | PR Sayısı |
+|------|-------------|----------|
+| 🥇 1 | [@Copilot](https://github.com/Copilot) | 1 |
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
-Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en fazla commit yapan geliştiricileri listeleyecektir.
+| Sıra | Geliştirici | Commit Sayısı |
+|------|-------------|---------------|
+| 🥇 1 | [@Copilot](https://github.com/Copilot) | 3 |
+| 🥈 2 | [@waroi](https://github.com/waroi) | 1 |
+
