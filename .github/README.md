@@ -22,6 +22,18 @@ Workflow'u manuel olarak çalıştırmak için:
 2. "Actions" sekmesine tıklayın
 3. "Update Monthly Developer Statistics" workflow'unu seçin
 4. "Run workflow" butonuna tıklayın
+5. İsteğe bağlı olarak rapor için yıl (YYYY) ve ay (1-12) değerlerini girebilirsiniz
+   - Yıl ve ay belirtilmezse, mevcut ay için rapor oluşturulur
+   - **Önemli**: Eski tarihler seçilemez. Yalnızca mevcut ay veya gelecek aylar için rapor oluşturulabilir
+
+### Tarih Doğrulama
+
+Rapor oluştururken aşağıdaki kurallar geçerlidir:
+- ❌ Geçmiş aylar için rapor oluşturulamaz
+- ✅ Mevcut ay için rapor oluşturulabilir
+- ✅ Gelecek aylar için rapor oluşturulabilir
+- Yıl, 4 haneli bir sayı olmalıdır (örn: 2026)
+- Ay, 1 ile 12 arasında bir sayı olmalıdır
 
 ## Gereksinimler
 
