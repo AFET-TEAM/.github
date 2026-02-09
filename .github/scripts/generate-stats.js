@@ -17,6 +17,10 @@ const now = new Date();
 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
+// Get current year's start and end dates
+const startOfYear = new Date(now.getFullYear(), 0, 1);
+const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+
 async function getOrganizationRepos() {
   try {
     const { data: repos } = await octokit.repos.listForOrg({
@@ -31,7 +35,7 @@ async function getOrganizationRepos() {
   }
 }
 
-async function getPRsForRepo(owner, repo) {
+async function getPRsForRepo(owner, repo, startDate, endDate) {
   try {
     const prs = [];
     let page = 1;
@@ -51,17 +55,17 @@ async function getPRsForRepo(owner, repo) {
       if (data.length === 0) {
         hasMore = false;
       } else {
-        // Filter PRs created in current month
-        const monthlyPRs = data.filter(pr => {
+        // Filter PRs created in the specified date range
+        const filteredPRs = data.filter(pr => {
           const createdAt = new Date(pr.created_at);
-          return createdAt >= startOfMonth && createdAt <= endOfMonth;
+          return createdAt >= startDate && createdAt <= endDate;
         });
         
-        prs.push(...monthlyPRs);
+        prs.push(...filteredPRs);
         
-        // If oldest PR in this page is older than start of month, stop
+        // If oldest PR in this page is older than start date, stop
         const oldestPR = data[data.length - 1];
-        if (new Date(oldestPR.created_at) < startOfMonth) {
+        if (new Date(oldestPR.created_at) < startDate) {
           hasMore = false;
         } else {
           page++;
@@ -76,7 +80,7 @@ async function getPRsForRepo(owner, repo) {
   }
 }
 
-async function getCommitsForRepo(owner, repo) {
+async function getCommitsForRepo(owner, repo, startDate, endDate) {
   try {
     const commits = [];
     let page = 1;
@@ -86,8 +90,8 @@ async function getCommitsForRepo(owner, repo) {
       const { data } = await octokit.repos.listCommits({
         owner,
         repo,
-        since: startOfMonth.toISOString(),
-        until: endOfMonth.toISOString(),
+        since: startDate.toISOString(),
+        until: endDate.toISOString(),
         per_page: 100,
         page
       });
@@ -107,8 +111,8 @@ async function getCommitsForRepo(owner, repo) {
   }
 }
 
-async function generateStatistics() {
-  console.log(`Generating statistics for ${ORG_NAME} - ${startOfMonth.toISOString().split('T')[0]} to ${endOfMonth.toISOString().split('T')[0]}`);
+async function generateStatistics(startDate, endDate, label) {
+  console.log(`Generating ${label} statistics for ${ORG_NAME} - ${startDate.toISOString().split('T')[0]} to ${endDate.toISOString().split('T')[0]}`);
   
   const repos = await getOrganizationRepos();
   console.log(`Found ${repos.length} repositories`);
@@ -120,7 +124,7 @@ async function generateStatistics() {
     console.log(`Processing ${repo.name}...`);
     
     // Get PRs
-    const prs = await getPRsForRepo(ORG_NAME, repo.name);
+    const prs = await getPRsForRepo(ORG_NAME, repo.name, startDate, endDate);
     console.log(`  Found ${prs.length} PRs`);
     
     prs.forEach(pr => {
@@ -129,7 +133,7 @@ async function generateStatistics() {
     });
     
     // Get commits
-    const commits = await getCommitsForRepo(ORG_NAME, repo.name);
+    const commits = await getCommitsForRepo(ORG_NAME, repo.name, startDate, endDate);
     console.log(`  Found ${commits.length} commits`);
     
     commits.forEach(commit => {
@@ -154,47 +158,91 @@ async function generateStatistics() {
   
   return {
     topPRContributors,
-    topCommitContributors,
-    month: startOfMonth.toLocaleDateString(LOCALE, { year: 'numeric', month: 'long' })
+    topCommitContributors
   };
 }
 
-async function updateReadme(stats) {
+async function updateReadme(monthlyStats, yearlyStats) {
   const readmePath = path.join(__dirname, '../../profile/README.md');
   let readme = fs.readFileSync(readmePath, 'utf-8');
   
-  // Create the monthly statistics section
-  let statsSection = `\n## 📊 Aylık İstatistikler (${stats.month})\n\n`;
+  const monthLabel = startOfMonth.toLocaleDateString(LOCALE, { year: 'numeric', month: 'long' });
+  const yearLabel = now.getFullYear().toString();
   
-  if (stats.topPRContributors.length > 0) {
+  // Create the monthly statistics section
+  let statsSection = `\n## 📊 Aylık İstatistikler (${monthLabel})\n\n`;
+  
+  if (monthlyStats.topPRContributors.length > 0) {
     statsSection += `### 🏆 En Çok PR Gönderen Geliştiriciler\n\n`;
     statsSection += `| Sıra | Geliştirici | PR Sayısı |\n`;
     statsSection += `|------|-------------|----------|\n`;
-    stats.topPRContributors.forEach(([dev, count], index) => {
+    monthlyStats.topPRContributors.forEach(([dev, count], index) => {
       const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '  ';
       statsSection += `| ${medal} ${index + 1} | [@${dev}](https://github.com/${dev}) | ${count} |\n`;
     });
     statsSection += `\n`;
   }
   
-  if (stats.topCommitContributors.length > 0) {
+  if (monthlyStats.topCommitContributors.length > 0) {
     statsSection += `### 💻 En Çok Geliştirme Yapan Geliştiriciler\n\n`;
     statsSection += `| Sıra | Geliştirici | Commit Sayısı |\n`;
     statsSection += `|------|-------------|---------------|\n`;
-    stats.topCommitContributors.forEach(([dev, count], index) => {
+    monthlyStats.topCommitContributors.forEach(([dev, count], index) => {
       const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '  ';
       statsSection += `| ${medal} ${index + 1} | [@${dev}](https://github.com/${dev}) | ${count} |\n`;
     });
     statsSection += `\n`;
   }
   
-  // Remove old stats section if exists
-  const statsStartMarker = '## 📊 Aylık İstatistikler';
-  const statsStartIndex = readme.indexOf(statsStartMarker);
+  // Create the yearly statistics section
+  statsSection += `## 📈 Yıllık İstatistikler (${yearLabel})\n\n`;
+  
+  if (yearlyStats.topPRContributors.length > 0) {
+    statsSection += `### 🏆 En Çok PR Gönderen Geliştiriciler\n\n`;
+    statsSection += `| Sıra | Geliştirici | PR Sayısı |\n`;
+    statsSection += `|------|-------------|----------|\n`;
+    yearlyStats.topPRContributors.forEach(([dev, count], index) => {
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '  ';
+      statsSection += `| ${medal} ${index + 1} | [@${dev}](https://github.com/${dev}) | ${count} |\n`;
+    });
+    statsSection += `\n`;
+  }
+  
+  if (yearlyStats.topCommitContributors.length > 0) {
+    statsSection += `### 💻 En Çok Geliştirme Yapan Geliştiriciler\n\n`;
+    statsSection += `| Sıra | Geliştirici | Commit Sayısı |\n`;
+    statsSection += `|------|-------------|---------------|\n`;
+    yearlyStats.topCommitContributors.forEach(([dev, count], index) => {
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '  ';
+      statsSection += `| ${medal} ${index + 1} | [@${dev}](https://github.com/${dev}) | ${count} |\n`;
+    });
+    statsSection += `\n`;
+  }
+  
+  // Remove old stats sections if they exist
+  const monthlyStatsMarker = '## 📊 Aylık İstatistikler';
+  const yearlyStatsMarker = '## 📈 Yıllık İstatistikler';
+  
+  let statsStartIndex = readme.indexOf(monthlyStatsMarker);
+  if (statsStartIndex === -1) {
+    statsStartIndex = readme.indexOf(yearlyStatsMarker);
+  }
   
   if (statsStartIndex !== -1) {
-    // Find the next section (starts with ##)
-    const nextSectionIndex = readme.indexOf('\n## ', statsStartIndex + 1);
+    // Find the next section (starts with ##) after the stats sections
+    let nextSectionIndex = readme.indexOf('\n## ', statsStartIndex + 1);
+    
+    // Check if the next section is the yearly stats marker, if so skip it
+    // This ensures both monthly and yearly sections are removed together
+    if (nextSectionIndex !== -1) {
+      // nextSectionIndex points to '\n## ', so we need to skip '\n' and check the rest
+      const sectionStart = nextSectionIndex + 1; // Skip the newline
+      if (readme.startsWith(yearlyStatsMarker, sectionStart)) {
+        // Find the section after the yearly stats
+        nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
+      }
+    }
+    
     if (nextSectionIndex !== -1) {
       readme = readme.substring(0, statsStartIndex) + readme.substring(nextSectionIndex);
     } else {
@@ -229,11 +277,17 @@ async function updateReadme(stats) {
 
 async function main() {
   try {
-    const stats = await generateStatistics();
-    console.log('\nTop PR Contributors:', stats.topPRContributors);
-    console.log('Top Commit Contributors:', stats.topCommitContributors);
+    // Generate monthly statistics
+    const monthlyStats = await generateStatistics(startOfMonth, endOfMonth, 'monthly');
+    console.log('\nMonthly Top PR Contributors:', monthlyStats.topPRContributors);
+    console.log('Monthly Top Commit Contributors:', monthlyStats.topCommitContributors);
     
-    await updateReadme(stats);
+    // Generate yearly statistics
+    const yearlyStats = await generateStatistics(startOfYear, endOfYear, 'yearly');
+    console.log('\nYearly Top PR Contributors:', yearlyStats.topPRContributors);
+    console.log('Yearly Top Commit Contributors:', yearlyStats.topCommitContributors);
+    
+    await updateReadme(monthlyStats, yearlyStats);
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);
