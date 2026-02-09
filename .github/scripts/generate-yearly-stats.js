@@ -12,26 +12,25 @@ const MAX_PAGES_PER_REPO = 10; // Limit pages to avoid rate limits
 const RATE_LIMIT_DELAY_MS = 1000; // Delay between API calls
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
-// Get report date from environment or use current month
+// Get current year's start and end dates
 const now = new Date();
-const reportYear = process.env.REPORT_YEAR ? parseInt(process.env.REPORT_YEAR, 10) : now.getFullYear();
-const reportMonth = process.env.REPORT_MONTH ? parseInt(process.env.REPORT_MONTH, 10) - 1 : now.getMonth(); // Month is 0-indexed
+const startOfYear = new Date(now.getFullYear(), 0, 1);
+const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
-// Validate that we're not generating reports for past dates
-const currentYear = now.getFullYear();
-const currentMonth = now.getMonth();
+// AI agents and bots to exclude from statistics
+const EXCLUDED_USERS = [
+  'copilot',
+  'github-actions[bot]',
+  'dependabot[bot]',
+  'renovate[bot]',
+  'greenkeeper[bot]',
+  'snyk-bot'
+];
 
-if (reportYear < currentYear || (reportYear === currentYear && reportMonth < currentMonth)) {
-  console.error('Error: Eski tarihler seçilemez. Geçmiş tarihler için rapor oluşturulamaz.');
-  console.error('Error: Cannot select old dates. Reports cannot be created for past dates.');
-  console.error(`Selected: ${reportYear}-${reportMonth + 1}`);
-  console.error(`Current: ${currentYear}-${currentMonth + 1}`);
-  process.exit(1);
+function isExcludedUser(username) {
+  const lowerUsername = username.toLowerCase();
+  return EXCLUDED_USERS.some(excluded => lowerUsername.includes(excluded.toLowerCase()));
 }
-
-// Get selected month's start and end dates
-const startOfMonth = new Date(reportYear, reportMonth, 1);
-const endOfMonth = new Date(reportYear, reportMonth + 1, 0);
 
 async function getOrganizationRepos() {
   try {
@@ -53,7 +52,7 @@ async function getPRsForRepo(owner, repo) {
     let page = 1;
     let hasMore = true;
     
-    while (hasMore) {
+    while (hasMore && page <= MAX_PAGES_PER_REPO) {
       const { data } = await octokit.pulls.list({
         owner,
         repo,
@@ -67,17 +66,17 @@ async function getPRsForRepo(owner, repo) {
       if (data.length === 0) {
         hasMore = false;
       } else {
-        // Filter PRs created in current month
-        const monthlyPRs = data.filter(pr => {
+        // Filter PRs created in current year
+        const yearlyPRs = data.filter(pr => {
           const createdAt = new Date(pr.created_at);
-          return createdAt >= startOfMonth && createdAt <= endOfMonth;
+          return createdAt >= startOfYear && createdAt <= endOfYear;
         });
         
-        prs.push(...monthlyPRs);
+        prs.push(...yearlyPRs);
         
-        // If oldest PR in this page is older than start of month, stop
+        // If oldest PR in this page is older than start of year, stop
         const oldestPR = data[data.length - 1];
-        if (new Date(oldestPR.created_at) < startOfMonth) {
+        if (new Date(oldestPR.created_at) < startOfYear) {
           hasMore = false;
         } else {
           page++;
@@ -102,8 +101,8 @@ async function getCommitsForRepo(owner, repo) {
       const { data } = await octokit.repos.listCommits({
         owner,
         repo,
-        since: startOfMonth.toISOString(),
-        until: endOfMonth.toISOString(),
+        since: startOfYear.toISOString(),
+        until: endOfYear.toISOString(),
         per_page: 100,
         page
       });
@@ -123,23 +122,8 @@ async function getCommitsForRepo(owner, repo) {
   }
 }
 
-// AI agents and bots to exclude from statistics
-const EXCLUDED_USERS = [
-  'copilot',
-  'github-actions[bot]',
-  'dependabot[bot]',
-  'renovate[bot]',
-  'greenkeeper[bot]',
-  'snyk-bot'
-];
-
-function isExcludedUser(username) {
-  const lowerUsername = username.toLowerCase();
-  return EXCLUDED_USERS.some(excluded => lowerUsername.includes(excluded.toLowerCase()));
-}
-
 async function generateStatistics() {
-  console.log(`Generating statistics for ${ORG_NAME} - ${startOfMonth.toISOString().split('T')[0]} to ${endOfMonth.toISOString().split('T')[0]}`);
+  console.log(`Generating yearly statistics for ${ORG_NAME} - ${startOfYear.toISOString().split('T')[0]} to ${endOfYear.toISOString().split('T')[0]}`);
   
   const repos = await getOrganizationRepos();
   console.log(`Found ${repos.length} repositories`);
@@ -178,19 +162,19 @@ async function generateStatistics() {
     await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY_MS));
   }
   
-  // Sort and get top 5
+  // Sort and get top 10 for yearly stats
   const topPRContributors = Object.entries(prStats)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+    .slice(0, 10);
     
   const topCommitContributors = Object.entries(commitStats)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+    .slice(0, 10);
   
   return {
     topPRContributors,
     topCommitContributors,
-    month: startOfMonth.toLocaleDateString(LOCALE, { year: 'numeric', month: 'long' })
+    year: startOfYear.getFullYear()
   };
 }
 
@@ -198,8 +182,8 @@ async function updateReadme(stats) {
   const readmePath = path.join(__dirname, '../../profile/README.md');
   let readme = fs.readFileSync(readmePath, 'utf-8');
   
-  // Create the monthly statistics section
-  let statsSection = `\n## 📊 Aylık İstatistikler (${stats.month})\n\n`;
+  // Create the yearly statistics section
+  let statsSection = `\n## 📈 Yıllık İstatistikler (${stats.year})\n\n`;
   
   if (stats.topPRContributors.length > 0) {
     statsSection += `### 🏆 En Çok PR Gönderen Geliştiriciler\n\n`;
@@ -223,9 +207,15 @@ async function updateReadme(stats) {
     statsSection += `\n`;
   }
   
-  // Remove old stats section if exists
-  const statsStartMarker = '## 📊 Aylık İstatistikler';
-  const statsStartIndex = readme.indexOf(statsStartMarker);
+  // Remove old yearly stats section if exists
+  const statsStartMarker = `## 📈 Yıllık İstatistikler (${stats.year})`;
+  const generalStatsMarker = '## 📈 Yıllık İstatistikler';
+  let statsStartIndex = readme.indexOf(statsStartMarker);
+  
+  // If exact year match not found, try to find any yearly stats section
+  if (statsStartIndex === -1) {
+    statsStartIndex = readme.indexOf(generalStatsMarker);
+  }
   
   if (statsStartIndex !== -1) {
     // Find the next section (starts with ##)
@@ -238,13 +228,15 @@ async function updateReadme(stats) {
     }
   }
   
-  // Insert new stats section after the team members section
+  // Insert new yearly stats section after monthly stats or team members section
+  const monthlySectionMarker = '## 📊 Aylık İstatistikler';
   const teamSectionMarker = '## 👥 Ekip Üyelerimiz';
-  const teamSectionIndex = readme.indexOf(teamSectionMarker);
   
-  if (teamSectionIndex !== -1) {
-    // Find the end of team section (next ## or end of file)
-    const nextSectionIndex = readme.indexOf('\n## ', teamSectionIndex + teamSectionMarker.length);
+  let insertIndex = readme.indexOf(monthlySectionMarker);
+  
+  if (insertIndex !== -1) {
+    // Find the end of monthly section (next ## or end of file)
+    const nextSectionIndex = readme.indexOf('\n## ', insertIndex + monthlySectionMarker.length);
     
     if (nextSectionIndex !== -1) {
       // Insert before next section
@@ -254,19 +246,32 @@ async function updateReadme(stats) {
       readme = readme.trimEnd() + '\n\n' + statsSection;
     }
   } else {
-    // Append at the end if team section not found
-    readme = readme.trimEnd() + '\n\n' + statsSection;
+    // If no monthly section, insert after team section
+    insertIndex = readme.indexOf(teamSectionMarker);
+    
+    if (insertIndex !== -1) {
+      const nextSectionIndex = readme.indexOf('\n## ', insertIndex + teamSectionMarker.length);
+      
+      if (nextSectionIndex !== -1) {
+        readme = readme.substring(0, nextSectionIndex) + '\n' + statsSection + readme.substring(nextSectionIndex);
+      } else {
+        readme = readme.trimEnd() + '\n\n' + statsSection;
+      }
+    } else {
+      // Append at the end if no sections found
+      readme = readme.trimEnd() + '\n\n' + statsSection;
+    }
   }
   
   fs.writeFileSync(readmePath, readme);
-  console.log('README updated successfully!');
+  console.log('README updated successfully with yearly statistics!');
 }
 
 async function main() {
   try {
     const stats = await generateStatistics();
-    console.log('\nTop PR Contributors:', stats.topPRContributors);
-    console.log('Top Commit Contributors:', stats.topCommitContributors);
+    console.log('\nTop PR Contributors (Yearly):', stats.topPRContributors);
+    console.log('Top Commit Contributors (Yearly):', stats.topCommitContributors);
     
     await updateReadme(stats);
   } catch (error) {

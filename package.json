@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "GitHub profile automation for AFET-TEAM",
   "scripts": {
-    "generate-stats": "node .github/scripts/generate-stats.js"
+    "generate-stats": "node .github/scripts/generate-stats.js",
+    "generate-yearly-stats": "node .github/scripts/generate-yearly-stats.js"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2"
