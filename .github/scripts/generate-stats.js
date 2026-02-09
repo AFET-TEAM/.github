@@ -12,10 +12,26 @@ const MAX_PAGES_PER_REPO = 10; // Limit pages to avoid rate limits
 const RATE_LIMIT_DELAY_MS = 1000; // Delay between API calls
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
-// Get current month's start and end dates
+// Get report date from environment or use current month
 const now = new Date();
-const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+const reportYear = process.env.REPORT_YEAR ? parseInt(process.env.REPORT_YEAR, 10) : now.getFullYear();
+const reportMonth = process.env.REPORT_MONTH ? parseInt(process.env.REPORT_MONTH, 10) - 1 : now.getMonth(); // Month is 0-indexed
+
+// Validate that we're not generating reports for past dates
+const currentYear = now.getFullYear();
+const currentMonth = now.getMonth();
+
+if (reportYear < currentYear || (reportYear === currentYear && reportMonth < currentMonth)) {
+  console.error('Error: Eski tarihler seçilemez. Geçmiş tarihler için rapor oluşturulamaz.');
+  console.error('Error: Cannot select old dates. Reports cannot be created for past dates.');
+  console.error(`Selected: ${reportYear}-${reportMonth + 1}`);
+  console.error(`Current: ${currentYear}-${currentMonth + 1}`);
+  process.exit(1);
+}
+
+// Get selected month's start and end dates
+const startOfMonth = new Date(reportYear, reportMonth, 1);
+const endOfMonth = new Date(reportYear, reportMonth + 1, 0);
 
 async function getOrganizationRepos() {
   try {

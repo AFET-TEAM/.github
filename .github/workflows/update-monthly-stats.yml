@@ -5,6 +5,15 @@ on:
     # Run on the 1st day of every month at 00:00 UTC
     - cron: '0 0 1 * *'
   workflow_dispatch: # Allow manual trigger
+    inputs:
+      year:
+        description: 'Report year (YYYY)'
+        required: false
+        type: string
+      month:
+        description: 'Report month (1-12)'
+        required: false
+        type: string
 
 jobs:
   update-stats:
@@ -13,6 +22,53 @@ jobs:
       contents: write
       
     steps:
+      - name: Validate Date Input
+        if: github.event_name == 'workflow_dispatch' && (inputs.year != '' || inputs.month != '')
+        run: |
+          # Get current date
+          CURRENT_YEAR=$(date +%Y)
+          CURRENT_MONTH=$(date +%-m)
+          
+          # Use provided year/month or default to current
+          INPUT_YEAR="${{ inputs.year }}"
+          INPUT_MONTH="${{ inputs.month }}"
+          
+          # If year or month is empty, use current values
+          if [ -z "$INPUT_YEAR" ]; then
+            INPUT_YEAR=$CURRENT_YEAR
+          fi
+          if [ -z "$INPUT_MONTH" ]; then
+            INPUT_MONTH=$CURRENT_MONTH
+          fi
+          
+          # Validate year and month are numbers
+          if ! [[ "$INPUT_YEAR" =~ ^[0-9]{4}$ ]]; then
+            echo "Error: Year must be a 4-digit number (YYYY)"
+            exit 1
+          fi
+          
+          if ! [[ "$INPUT_MONTH" =~ ^[0-9]+$ ]] || [ "$INPUT_MONTH" -lt 1 ] || [ "$INPUT_MONTH" -gt 12 ]; then
+            echo "Error: Month must be a number between 1 and 12"
+            exit 1
+          fi
+          
+          # Prevent selecting old dates (dates before current month)
+          if [ "$INPUT_YEAR" -lt "$CURRENT_YEAR" ]; then
+            echo "Error: Eski tarihler seçilemez. Geçmiş tarihler için rapor oluşturulamaz."
+            echo "Error: Cannot select old dates. Reports cannot be created for past dates."
+            echo "Selected: $INPUT_YEAR-$INPUT_MONTH"
+            echo "Current: $CURRENT_YEAR-$CURRENT_MONTH"
+            exit 1
+          elif [ "$INPUT_YEAR" -eq "$CURRENT_YEAR" ] && [ "$INPUT_MONTH" -lt "$CURRENT_MONTH" ]; then
+            echo "Error: Eski tarihler seçilemez. Geçmiş tarihler için rapor oluşturulamaz."
+            echo "Error: Cannot select old dates. Reports cannot be created for past dates."
+            echo "Selected: $INPUT_YEAR-$INPUT_MONTH"
+            echo "Current: $CURRENT_YEAR-$CURRENT_MONTH"
+            exit 1
+          fi
+          
+          echo "Date validation passed: $INPUT_YEAR-$INPUT_MONTH"
+      
       - name: Checkout repository
         uses: actions/checkout@v4
         
@@ -28,6 +84,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORG_NAME: 'AFET-TEAM'
+          REPORT_YEAR: ${{ inputs.year }}
+          REPORT_MONTH: ${{ inputs.month }}
         run: |
           node .github/scripts/generate-stats.js
           
