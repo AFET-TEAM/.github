@@ -80,3 +80,15 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 | 🥈 2 | [@github-actions[bot]](https://github.com/github-actions[bot]) | 2 |
 | 🥉 3 | [@waroi](https://github.com/waroi) | 1 |
 
+
+## 📈 Yıllık İstatistikler (2026)
+
+### 💻 En Çok Geliştirme Yapan Geliştiriciler
+
+| Sıra | Geliştirici | Commit Sayısı |
+|------|-------------|---------------|
+| 🥇 1 | [@Onur-Ardic](https://github.com/Onur-Ardic) | 36 |
+| 🥈 2 | [@tarikyesilcimenn](https://github.com/tarikyesilcimenn) | 9 |
+| 🥉 3 | [@waroi](https://github.com/waroi) | 7 |
+|    4 | [@safaksenoleem](https://github.com/safaksenoleem) | 1 |
+
