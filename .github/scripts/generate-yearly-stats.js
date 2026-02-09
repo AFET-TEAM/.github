@@ -15,7 +15,7 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
 // Get current year's start and end dates
 const now = new Date();
 const startOfYear = new Date(now.getFullYear(), 0, 1);
-const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
 
 // AI agents and bots to exclude from statistics
 const EXCLUDED_USERS = [
@@ -208,8 +208,14 @@ async function updateReadme(stats) {
   }
   
   // Remove old yearly stats section if exists
-  const statsStartMarker = '## 📈 Yıllık İstatistikler';
-  const statsStartIndex = readme.indexOf(statsStartMarker);
+  const statsStartMarker = `## 📈 Yıllık İstatistikler (${stats.year})`;
+  const generalStatsMarker = '## 📈 Yıllık İstatistikler';
+  let statsStartIndex = readme.indexOf(statsStartMarker);
+  
+  // If exact year match not found, try to find any yearly stats section
+  if (statsStartIndex === -1) {
+    statsStartIndex = readme.indexOf(generalStatsMarker);
+  }
   
   if (statsStartIndex !== -1) {
     // Find the next section (starts with ##)
