@@ -235,7 +235,7 @@ async function updateReadme(monthlyStats, yearlyStats) {
     // Check if the next section is the yearly stats marker, if so skip it
     if (nextSectionIndex !== -1) {
       const nextSectionTitle = readme.substring(nextSectionIndex, nextSectionIndex + 50);
-      if (nextSectionTitle.includes(yearlyStatsMarker.substring(3))) {
+      if (nextSectionTitle.includes('Yıllık İstatistikler')) {
         // Find the section after the yearly stats
         nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
       }
