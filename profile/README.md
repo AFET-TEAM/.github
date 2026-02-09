@@ -59,12 +59,13 @@
 
 | Sıra | Geliştirici | PR Sayısı |
 |------|-------------|----------|
-| 🥇 1 | [@Copilot](https://github.com/Copilot) | 1 |
+| 🥇 1 | [@Copilot](https://github.com/Copilot) | 2 |
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
 | Sıra | Geliştirici | Commit Sayısı |
 |------|-------------|---------------|
 | 🥇 1 | [@Copilot](https://github.com/Copilot) | 3 |
-| 🥈 2 | [@waroi](https://github.com/waroi) | 1 |
+| 🥈 2 | [@github-actions[bot]](https://github.com/github-actions[bot]) | 1 |
+| 🥉 3 | [@waroi](https://github.com/waroi) | 1 |
 
