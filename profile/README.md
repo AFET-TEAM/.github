@@ -51,3 +51,13 @@
 | [Onur Ardıç](https://github.com/Onur-Ardic) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Onur-Ardic?label=Takipçi&style=social) |
 | [Buğra Özkahraman](https://github.com/Bugra034) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Bugra034?label=Takipçi&style=social) |
 | [Yunus Orak](https://github.com/yunusorak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/yunusorak?label=Takipçi&style=social) |
+
+## 📊 Aylık İstatistikler (Şubat 2026)
+
+### 🏆 En Çok PR Gönderen Geliştiriciler
+
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en çok PR gönderen geliştiricileri listeleyecektir.
+
+### 💻 En Çok Geliştirme Yapan Geliştiriciler
+
+Bu bölüm ayın başında otomatik olarak güncellenecektir. GitHub Actions workflow'u her ayın 1'inde çalışarak o ay en fazla commit yapan geliştiricileri listeleyecektir.
