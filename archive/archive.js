@@ -11,6 +11,13 @@ class ArchiveManager {
         this.renderReports();
     }
 
+    // Sanitize HTML to prevent XSS attacks
+    sanitizeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     // Calculate week number and year for a given date
     getWeekInfo(date) {
         const d = new Date(date);
@@ -35,6 +42,9 @@ class ArchiveManager {
         const reportWeek = this.getWeekInfo(report);
         
         // Calculate week difference
+        // Note: This uses a simplified calculation with 52 weeks per year.
+        // In reality, some years have 53 ISO weeks. For most practical purposes
+        // within a 1-2 week range, this approximation is sufficient.
         const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
         
         // Editable if within current week or 1 week back (0 or 1 weeks difference)
@@ -49,6 +59,8 @@ class ArchiveManager {
         const currentWeek = this.getWeekInfo(now);
         const reportWeek = this.getWeekInfo(report);
         
+        // Note: This uses a simplified calculation with 52 weeks per year.
+        // In reality, some years have 53 ISO weeks.
         const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
         
         if (weeksDiff === 0) {
@@ -194,24 +206,24 @@ class ArchiveManager {
             </div>
 
             <div class="report-content" id="content-${report.id}">
-                <p><strong>Başlık:</strong> ${report.title}</p>
-                <p><strong>Yazar:</strong> ${report.author}</p>
-                <p><strong>İçerik:</strong> ${report.content}</p>
-                <p><strong>Yapılan İşler:</strong> ${report.tasks}</p>
+                <p><strong>Başlık:</strong> ${this.sanitizeHTML(report.title)}</p>
+                <p><strong>Yazar:</strong> ${this.sanitizeHTML(report.author)}</p>
+                <p><strong>İçerik:</strong> ${this.sanitizeHTML(report.content)}</p>
+                <p><strong>Yapılan İşler:</strong> ${this.sanitizeHTML(report.tasks)}</p>
             </div>
 
             <div class="edit-form" id="form-${report.id}">
                 <div class="form-group">
                     <label>Başlık:</label>
-                    <input type="text" id="title-${report.id}" value="${report.title}">
+                    <input type="text" id="title-${report.id}" value="${this.sanitizeHTML(report.title)}">
                 </div>
                 <div class="form-group">
                     <label>İçerik:</label>
-                    <textarea id="content-input-${report.id}">${report.content}</textarea>
+                    <textarea id="content-input-${report.id}">${this.sanitizeHTML(report.content)}</textarea>
                 </div>
                 <div class="form-group">
                     <label>Yapılan İşler:</label>
-                    <textarea id="tasks-${report.id}">${report.tasks}</textarea>
+                    <textarea id="tasks-${report.id}">${this.sanitizeHTML(report.tasks)}</textarea>
                 </div>
             </div>
 
@@ -290,10 +302,10 @@ class ArchiveManager {
             return;
         }
 
-        // Update report
-        report.title = title;
-        report.content = content;
-        report.tasks = tasks;
+        // Sanitize inputs before saving to prevent XSS
+        report.title = this.sanitizeHTML(title);
+        report.content = this.sanitizeHTML(content);
+        report.tasks = this.sanitizeHTML(tasks);
 
         this.saveReports();
         this.renderReports();

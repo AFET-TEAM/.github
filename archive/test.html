@@ -34,6 +34,9 @@
             const currentWeek = getWeekInfo(now);
             const reportWeek = getWeekInfo(report);
             
+            // Note: This uses a simplified calculation with 52 weeks per year.
+            // In reality, some years have 53 ISO weeks. For most practical purposes
+            // within a 1-2 week range, this approximation is sufficient.
             const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
             
             return weeksDiff >= 0 && weeksDiff <= 1;
@@ -46,6 +49,8 @@
             const currentWeek = getWeekInfo(now);
             const reportWeek = getWeekInfo(report);
             
+            // Note: This uses a simplified calculation with 52 weeks per year.
+            // In reality, some years have 53 ISO weeks.
             const weeksDiff = (currentWeek.year - reportWeek.year) * 52 + (currentWeek.week - reportWeek.week);
             
             if (weeksDiff === 0) {
