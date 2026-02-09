@@ -4,8 +4,12 @@ const { Octokit } = require('@octokit/rest');
 const fs = require('fs');
 const path = require('path');
 
+// Configuration constants
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const ORG_NAME = process.env.ORG_NAME || 'AFET-TEAM';
+const LOCALE = process.env.LOCALE || 'tr-TR';
+const MAX_PAGES_PER_REPO = 10; // Limit pages to avoid rate limits
+const RATE_LIMIT_DELAY_MS = 1000; // Delay between API calls
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 // Get current month's start and end dates
@@ -78,7 +82,7 @@ async function getCommitsForRepo(owner, repo) {
     let page = 1;
     let hasMore = true;
     
-    while (hasMore && page <= 10) { // Limit to 10 pages to avoid rate limits
+    while (hasMore && page <= MAX_PAGES_PER_REPO) {
       const { data } = await octokit.repos.listCommits({
         owner,
         repo,
@@ -136,7 +140,7 @@ async function generateStatistics() {
     });
     
     // Add delay to avoid rate limiting
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY_MS));
   }
   
   // Sort and get top 5
@@ -151,7 +155,7 @@ async function generateStatistics() {
   return {
     topPRContributors,
     topCommitContributors,
-    month: startOfMonth.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long' })
+    month: startOfMonth.toLocaleDateString(LOCALE, { year: 'numeric', month: 'long' })
   };
 }
 
