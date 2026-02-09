@@ -66,6 +66,6 @@
 | Sıra | Geliştirici | Commit Sayısı |
 |------|-------------|---------------|
 | 🥇 1 | [@Copilot](https://github.com/Copilot) | 3 |
-| 🥈 2 | [@github-actions[bot]](https://github.com/github-actions[bot]) | 1 |
+| 🥈 2 | [@github-actions[bot]](https://github.com/github-actions[bot]) | 2 |
 | 🥉 3 | [@waroi](https://github.com/waroi) | 1 |
 
