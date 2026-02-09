@@ -10,7 +10,6 @@ const ORG_NAME = process.env.ORG_NAME || 'AFET-TEAM';
 const LOCALE = process.env.LOCALE || 'tr-TR';
 const MAX_PAGES_PER_REPO = 10; // Limit pages to avoid rate limits
 const RATE_LIMIT_DELAY_MS = 1000; // Delay between API calls
-const SECTION_TITLE_PREVIEW_LENGTH = 50; // Length to preview section titles for matching
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
 // Get current month's start and end dates
@@ -234,12 +233,10 @@ async function updateReadme(monthlyStats, yearlyStats) {
     let nextSectionIndex = readme.indexOf('\n## ', statsStartIndex + 1);
     
     // Check if the next section is the yearly stats marker, if so skip it
-    if (nextSectionIndex !== -1) {
-      const nextSectionTitle = readme.substring(nextSectionIndex, nextSectionIndex + SECTION_TITLE_PREVIEW_LENGTH);
-      if (nextSectionTitle.includes('Yıllık İstatistikler')) {
-        // Find the section after the yearly stats
-        nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
-      }
+    // This ensures both monthly and yearly sections are removed together
+    if (nextSectionIndex !== -1 && readme.indexOf(yearlyStatsMarker, nextSectionIndex) === nextSectionIndex + 1) {
+      // Find the section after the yearly stats
+      nextSectionIndex = readme.indexOf('\n## ', nextSectionIndex + 1);
     }
     
     if (nextSectionIndex !== -1) {
