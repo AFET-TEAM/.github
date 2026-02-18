@@ -9,8 +9,8 @@
 | [Atmosware-WebSitesi-BE](https://github.com/FreeFrontendTeam/atmosware-website-be) | Cosmos| 🛠️ Geliştirme aşamasında |
 | [Atmosware-WebSitesi-Panel](https://github.com/FreeFrontendTeam/atmosware-website-panel) | Cosmos| 🛠️ Geliştirme aşamasında |
 | [Retrosware](https://github.com/FreeFrontendTeam/retrosware) |Olimpos| 🛠️ Geliştirme aşamasında |
-| [Atos](https://github.com/FreeFrontendTeam/atos)  |Eternal Coders| 🛠️ Geliştirme aşamasında |
-| [Atos-BE](https://github.com/FreeFrontendTeam/atos-be)  |Eternal Coders| 🛠️ Geliştirme aşamasında |
+| [Atmos](https://github.com/FreeFrontendTeam/atmos)  |Eternal Coders| 🛠️ Geliştirme aşamasında |
+| [Atmos-BE](https://github.com/FreeFrontendTeam/atmos-be)  |Eternal Coders| 🛠️ Geliştirme aşamasında |
 | [Chartoon](https://github.com/FreeFrontendTeam/chartoon) | LOC Lord Of Charts | 🛠️ Geliştirme aşamasında |
 | [Kronos](https://github.com/FreeFrontendTeam/kronos) | Interstellar | 🛠️ Geliştirme aşamasında |
 
