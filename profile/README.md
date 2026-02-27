@@ -98,23 +98,23 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 
 | Sıra | Geliştirici | PR Sayısı |
 |------|-------------|----------|
-| 🥇 1 | [@erkantokmak](https://github.com/erkantokmak) | 12 |
-| 🥈 2 | [@Bugra034](https://github.com/Bugra034) | 12 |
-| 🥉 3 | [@waroi](https://github.com/waroi) | 8 |
-|    4 | [@yunusorak](https://github.com/yunusorak) | 5 |
+| 🥇 1 | [@waroi](https://github.com/waroi) | 19 |
+| 🥈 2 | [@Bugra034](https://github.com/Bugra034) | 15 |
+| 🥉 3 | [@erkantokmak](https://github.com/erkantokmak) | 13 |
+|    4 | [@yunusorak](https://github.com/yunusorak) | 6 |
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
 | Sıra | Geliştirici | Commit Sayısı |
 |------|-------------|---------------|
-| 🥇 1 | [@Onur-Ardic](https://github.com/Onur-Ardic) | 40 |
-| 🥈 2 | [@erkantokmak](https://github.com/erkantokmak) | 17 |
-| 🥉 3 | [@waroi](https://github.com/waroi) | 13 |
-|    4 | [@tarikyesilcimenn](https://github.com/tarikyesilcimenn) | 9 |
-|    5 | [@yunusorak](https://github.com/yunusorak) | 7 |
-|    6 | [@google-labs-jules[bot]](https://github.com/google-labs-jules[bot]) | 5 |
+| 🥇 1 | [@Onur-Ardic](https://github.com/Onur-Ardic) | 41 |
+| 🥈 2 | [@waroi](https://github.com/waroi) | 35 |
+| 🥉 3 | [@erkantokmak](https://github.com/erkantokmak) | 19 |
+|    4 | [@google-labs-jules[bot]](https://github.com/google-labs-jules[bot]) | 19 |
+|    5 | [@tarikyesilcimenn](https://github.com/tarikyesilcimenn) | 9 |
+|    6 | [@yunusorak](https://github.com/yunusorak) | 8 |
 |    7 | [@fatihdonmezdev](https://github.com/fatihdonmezdev) | 2 |
 |    8 | [@TCNDOGRUL](https://github.com/TCNDOGRUL) | 1 |
-|    9 | [@safaksenoleem](https://github.com/safaksenoleem) | 1 |
-|    10 | [@claude](https://github.com/claude) | 1 |
+|    9 | [@yunusatmosware](https://github.com/yunusatmosware) | 1 |
+|    10 | [@safaksenoleem](https://github.com/safaksenoleem) | 1 |
 
