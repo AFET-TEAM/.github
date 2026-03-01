@@ -74,7 +74,15 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 
 
 
+
+
 ## 📊 Aylık İstatistikler (Mart 2026)
+
+### 💻 En Çok Geliştirme Yapan Geliştiriciler
+
+| Sıra | Geliştirici | Commit Sayısı |
+|------|-------------|---------------|
+| 🥇 1 | [@waroi](https://github.com/waroi) | 3 |
 
 
 ## 📈 Yıllık İstatistikler (2026)
