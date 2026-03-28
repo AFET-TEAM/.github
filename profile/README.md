@@ -78,21 +78,23 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 
 
 
+
+
 ## 📊 Aylık İstatistikler (Mart 2026)
 
 ### 🏆 En Çok PR Gönderen Geliştiriciler
 
 | Sıra | Geliştirici | PR Sayısı |
 |------|-------------|----------|
-| 🥇 1 | [@waroi](https://github.com/waroi) | 17 |
+| 🥇 1 | [@waroi](https://github.com/waroi) | 18 |
 | 🥈 2 | [@Bugra034](https://github.com/Bugra034) | 1 |
 
 ### 💻 En Çok Geliştirme Yapan Geliştiriciler
 
 | Sıra | Geliştirici | Commit Sayısı |
 |------|-------------|---------------|
-| 🥇 1 | [@waroi](https://github.com/waroi) | 23 |
-| 🥈 2 | [@google-labs-jules[bot]](https://github.com/google-labs-jules[bot]) | 14 |
+| 🥇 1 | [@waroi](https://github.com/waroi) | 24 |
+| 🥈 2 | [@google-labs-jules[bot]](https://github.com/google-labs-jules[bot]) | 17 |
 
 
 ## 📈 Yıllık İstatistikler (2026)
