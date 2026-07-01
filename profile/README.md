@@ -48,7 +48,9 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 | [Buğra Özkahraman](https://github.com/Bugra034) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/Bugra034?label=Takipçi&style=social) |
 | [Yunus Orak](https://github.com/yunusorak) | Frontend Developer | ![GitHub](https://img.shields.io/github/followers/yunusorak?label=Takipçi&style=social) |
 
-## 📊 Aylık İstatistikler (Haziran 2026)
+
+
+## 📊 Aylık İstatistikler (Temmuz 2026)
 
 
 ## 📈 Yıllık İstatistikler (2026)
