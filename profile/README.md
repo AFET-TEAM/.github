@@ -50,7 +50,9 @@ AFET-TEAM üyeleri haftalık raporlarını görüntüleyebilir ve düzenleyebili
 
 
 
-## 📊 Aylık İstatistikler (Temmuz 2026)
+
+
+## 📊 Aylık İstatistikler (Ağustos 2026)
 
 
 ## 📈 Yıllık İstatistikler (2026)
